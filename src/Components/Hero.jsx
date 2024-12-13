@@ -9,7 +9,7 @@ const Hero = () => {
       </div>
       <h1 className='text-4xl font-bold'>
         i'm{""}
-        <span className='text-transparent bg-clip-text bg-gradient-to-r from bg-green-400 to-blue-500'>nshimiyumukiza erneste</span>
+         <span className='text-transparent bg-clip-text bg-gradient-to-r from bg-green-400 to-blue-500'> nshimiyumukiza erneste</span>
         ,student developer
       </h1>
       <p className='mt-4 text-lg text-gray-300 px-4 md:px-32'>
