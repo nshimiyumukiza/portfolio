@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link, Outlet } from 'react-router'
 const Hero = () => {
   return (
     <div className='bg-black text-white py-16 text-center px-12'>
@@ -16,9 +16,10 @@ const Hero = () => {
        i have the goal to be full stack developer
       </p>
       <div className=' mt-8 space-x-4'>
-        <button className='bg-gradient-to-r from-green-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full'>contact with me</button>
+        <Link to ="/contacts"className='bg-gradient-to-r from-green-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full'>contact with me</Link>
         <button className='bg-gradient-to-r  from-pink-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full'>resume</button>
       </div>
+      <Outlet/>
     </div>
   )
 }
