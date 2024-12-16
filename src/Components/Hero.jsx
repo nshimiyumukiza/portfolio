@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link, Outlet } from 'react-router'
+import { useState } from 'react'
 const Hero = () => {
+  const [click,setClick]=useState()
   return (
     <div className='bg-black text-white py-16 text-center px-12'>
       <div className='flex justify-center'>
@@ -17,7 +19,7 @@ const Hero = () => {
       </p>
       <div className=' mt-8 space-x-4'>
         <Link to ="/contacts"className='bg-gradient-to-r from-green-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full'>contact with me</Link>
-        <button className='bg-gradient-to-r  from-pink-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full'>resume</button>
+        <button onClick={() =>setClick(alert("wait "))} className='bg-gradient-to-r  from-pink-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full'>resume</button>
       </div>
       <Outlet/>
     </div>

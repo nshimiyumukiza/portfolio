@@ -7,7 +7,7 @@ import { FaGithub } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="bg-black text-white pt-8">
+    <div className="bg-black text-white">
       <div  className="pt-12 pb-18 space-y-4">
         <div className='flex gap-1 items-center'> 
         <AiOutlineMessage className='text-blue-500  w-[50px]' />

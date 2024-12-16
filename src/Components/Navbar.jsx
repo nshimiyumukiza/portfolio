@@ -15,25 +15,20 @@ const Navbar = () => {
         </Link>
         <div className="space-x-6 flex">
           <div className="flex gap-1 items-center">
-            <FaHome className="text-pink-200"/>
+            <FaHome className="text-blue-500"/>
             <Link to="/" className="hover:text-blue-400">
               Home
             </Link>
           </div>
           <div className="flex gap-1 items-center">
-            <IoIosPerson className="text-pink-200"/>
+            <IoIosPerson className="text-blue-500"/>
             <Link to="about" className="hover:text-blue-400">
               About me
             </Link>
           </div>
+         
           <div className="flex gap-1 items-center">
-            <GoProjectSymlink className="text-pink-200"/>
-            <Link to="project" className="hover:text-blue-400">
-              Projects
-            </Link>
-          </div>
-          <div className="flex gap-1 items-center">
-            <RiContactsFill className="text-pink-200"/>
+            <RiContactsFill className="text-blue-500"/>
             <Link to="contact" className="hover:text-blue-400">
               Contact
             </Link>
