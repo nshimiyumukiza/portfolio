@@ -1,19 +1,59 @@
-import React from 'react'
+import { Input } from "antd";
+import { FaEnvelope, FaMapMarkedAlt, FaPhone } from 'react-icons/fa'
+const { TextArea } = Input;
 const Contact = () => {
   return (
-    <div className='bg-sky-900 text-white '>
-      <div className='flex flex-col justify-center pt-12'>
-        <h1 className='text-3xl text-center font-bold p-8'>Contact with me</h1>
-        <div className=' w-[300px] h-[450]px m-auto'>
-            <form className='space-y-4 border p-3'>
-                <input className=' rounded-md border outline-none text-black font-bold p-4' type="text"placeholder='Enter Name' /><br />
-                <input className=' rounded-md border outline-none text-black font-bold p-4' type="text" placeholder='Enter Email'/><br />
-                <textarea className=' rounded-md border outline-none text-black font-bold p-4' name="" id=""placeholder='type message'></textarea><br />
-                <button className=' rounded-md px-4 bg-blue-600'>Send</button>
-            </form>
+    <div className="bg-black text-white md:py-16 md:px-16 px-4 py-4 ">
+      <div className="md:mx-auto py-8 md:px-16 grid grid-cols-1 md:grid-cols-2">
+        <div>
+        <h1 className="text-4xl font-semibold mb-20 text-center text-green-400">Contact with me</h1>
+        <div className='grid grid-cols-1 md:grid-cols-2 items-center md:space-x-12'>
+<div className='flex-1'>
+<h1 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-4'>let's talk</h1>
+<p>i'm open descussing web projects or parternship opportunities</p>
+<div className='mb-4 mt-8'>
+<FaEnvelope className='text-green-400'/>
+<a href="">nshimiyumukizaerneste99@gmail.com</a>
+</div>
+<div className='mb-4 mt-8'>
+<FaPhone className='text-green-400'/>
+<span>+0794650639</span>
+</div>
+<div className='mb-4 mt-8'>
+<FaMapMarkedAlt className='text-green-400'/>
+<span>Rwanda ,east ,Gatsibo</span>
+</div>
+</div>
         </div>
-      </div>
-    </div>
+       
+        </div>
+        <div className="flex-1 w-full mt-32">
+          <div>
+            <label className="text-xl" htmlFor="">name</label>
+          <Input placeholder="enter your name" />
+          </div>
+          <div>
+            <label className="text-xl" htmlFor="">email</label>
+          <Input placeholder="enter email " />
+          </div>
+          <div>
+            <label className="text-xl" htmlFor="">Message</label>
+          <TextArea
+      showCount
+      maxLength={1000}
+      
+      placeholder="enter message"
+      style={{
+        height: 120,
+        resize: 'none',
+      }}
+    />
+            <button className='bg-gradient-to-r  from-pink-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full mt-4'>Send</button>
+          </div>
+        </div>
+        </div>
+        
+        </div>
   )
 }
 

@@ -5,7 +5,7 @@ import { GoProjectSymlink } from "react-icons/go";
 import { RiContactsFill } from "react-icons/ri";
 const Navbar = () => {
   return (
-    <nav className="bg-black text-white px-8 md:px-16">
+    <nav className="bg-black text-white px-8 md:px-16 md:py-8 py-4 ">
       <div className="py-2 flex justify-center md:justify-between items-center">
         <Link
           to="/"

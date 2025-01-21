@@ -4,6 +4,7 @@ import Hero from "./Components/Hero"
 import Navbar from "./Components/Navbar"
 import Footer from "./Components/Footer"
 import Contact from "./Components/Contact";
+import Footer1 from "./Components/Footer1";
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
 </Route>
 </Routes>
    </BrowserRouter>
+   <Footer1 />
     </div>
   )
 }
