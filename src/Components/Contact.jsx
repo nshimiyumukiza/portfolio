@@ -1,7 +1,27 @@
 import { Input } from "antd";
+import axios from "axios";
+import { useState } from "react";
 import { FaEnvelope, FaMapMarkedAlt, FaPhone } from 'react-icons/fa'
 const { TextArea } = Input;
 const Contact = () => {
+  const [formData,setFormData]=useState({name:"",email:"",message:""})
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData, 
+      [name]: value, 
+    });
+  };
+
+  const HandleSendMessage= async (e)=>{
+     e.preventDefault()
+
+     const response = await axios.post("http://localhost:4500/user/",formData)
+     console.log(response)
+     alert(response.data.message)
+
+  }
   return (
     <div className="bg-black text-white md:py-16 md:px-16 px-4 py-4 ">
       <div className="md:mx-auto py-8 md:px-16 grid grid-cols-1 md:grid-cols-2">
@@ -28,28 +48,33 @@ const Contact = () => {
        
         </div>
         <div className="flex-1 w-full mt-32">
+          <form action="submit" onSubmit={HandleSendMessage} >
           <div>
-            <label className="text-xl" htmlFor="">name</label>
-          <Input placeholder="enter your name" />
+            <label className="text-xl" htmlFor="name">name</label>
+          <Input placeholder="enter your name" name="name" value={formData.name} onChange={handleChange}/>
           </div>
           <div>
-            <label className="text-xl" htmlFor="">email</label>
-          <Input placeholder="enter email " />
+            <label className="text-xl" htmlFor="email">email</label>
+          <Input placeholder="enter email " name="email" value={formData.email} onChange={handleChange}/>
           </div>
           <div>
-            <label className="text-xl" htmlFor="">Message</label>
+            <label className="text-xl" htmlFor="message">Message</label>
           <TextArea
       showCount
       maxLength={1000}
-      
+      name="message"
+      value={formData.message}
+      onChange={handleChange}
       placeholder="enter message"
       style={{
         height: 120,
         resize: 'none',
       }}
     />
-            <button className='bg-gradient-to-r  from-pink-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full mt-4'>Send</button>
+            <button type="submit" className='bg-gradient-to-r  from-pink-400 to-blue-500 text-white  md:inline px-4 py-2 rounded-full mt-4'>Send</button>
           </div>
+          </form>
+        
         </div>
         </div>
         
