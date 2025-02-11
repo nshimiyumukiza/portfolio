@@ -47,7 +47,9 @@ const Contact = () => {
         </div>
        
         </div>
-        <div className="flex-1 w-full mt-32">
+        
+        <div className="flex-1 w-full mt-16 md:mt-32">
+        <h1 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-4'>Message</h1>
           <form action="submit" onSubmit={HandleSendMessage} >
           <div>
             <label className="text-xl" htmlFor="name">name</label>

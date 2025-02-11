@@ -9,7 +9,7 @@ const About = () => {
       <div className="md:mx-auto py-8 md:px-16">
         <h1 className="text-4xl font-semibold mb-12 text-center text-green-400">about me</h1>
         <div className="flex flex-col md:flex-row items-center space-x-12">
-            <img src="./image.png" alt="" className="w-72 h-96 rounded object-cover mb-8 md:mb-0" />
+            <img src="public/sagaga.jpg" alt="" className="w-72 h-96 rounded object-cover mb-8 md:mb-0" />
             <div className="flex-1">
               <p className="text-xl mb-8">
                 I am a possionate student-developer with a focus on bluilding
@@ -37,7 +37,7 @@ const About = () => {
             </div>
             
           
-           <div className="space-x-4">
+           <div className="space-x-1 sm:space-x-4">
              <div className="flex items-center flex-wrap">
               <div>
               <SiTailwindcss className="text-2xl text-blue-500"/>
