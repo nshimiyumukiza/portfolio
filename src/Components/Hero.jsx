@@ -11,7 +11,7 @@ const Hero = () => {
       <div className="bg-black text-white py-16 text-center px-12">
         <div className="flex justify-center">
           <img
-            src="public/image.png"
+            src="./image.png"
             alt=""
             className="mx-autor mb-8 w-48 h-48 rounded-full object-cover transifrom transition-transiform 
       duretion-300 hover:scale-105 "
