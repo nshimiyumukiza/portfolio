@@ -37,7 +37,7 @@ const About = () => {
             </div>
             
           
-           <div className="space-x-4">
+           <div className="space-x-1 sm:space-x-4">
              <div className="flex items-center flex-wrap">
               <div>
               <SiTailwindcss className="text-2xl text-blue-500"/>
