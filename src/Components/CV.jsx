@@ -1,116 +1,423 @@
-import { AiOutlineMessage } from "react-icons/ai";
-import { MdEmail } from "react-icons/md";
-import { MdPhoneInTalk } from "react-icons/md";
+
+// import { motion } from "framer-motion"; // Import Framer Motion
+// import { MdEmail, MdPhoneInTalk } from "react-icons/md";
+// import { ImFacebook2 } from "react-icons/im";
+// import { FaGithub } from "react-icons/fa";
+
+// const CV = () => {
+//   // Animation variants for Framer Motion
+//   const fadeInUp = {
+//     hidden: { opacity: 0, y: 20 },
+//     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+//   };
+
+//   const staggerContainer = {
+//     hidden: { opacity: 0 },
+//     visible: {
+//       opacity: 1,
+//       transition: {
+//         staggerChildren: 0.2, // Stagger animations for children
+//       },
+//     },
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-black py-8">
+//       <div className="container mx-auto px-4">
+//         {/* Profile Section */}
+//         <motion.div
+//           initial="hidden"
+//           animate="visible"
+//           variants={staggerContainer}
+//           className="flex justify-center"
+//         >
+//           <motion.div variants={fadeInUp} className="text-center">
+//             <img
+//               src="./image.png"
+//               alt="Profile Picture"
+//               className="mx-auto mb-8 w-48 h-48 rounded-full object-cover transform transition-transform duration-300 hover:scale-105"
+//             />
+//             <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl font-bold">
+//               Nshimiyumukiza Erneste
+//             </h1>
+//             <p className="text-2xl mt-2">FullStack Developer</p>
+//             <p className="text-xl mt-2">Birth Date: 30/3/2004</p>
+//           </motion.div>
+//         </motion.div>
+
+//         {/* Contact, Education, Skills, and Languages Sections */}
+//         <motion.div
+//           initial="hidden"
+//           animate="visible"
+//           variants={staggerContainer}
+//           className="flex flex-col md:flex-row justify-between mt-8 space-y-8 md:space-y-0 md:space-x-8"
+//         >
+//           {/* Contact Section */}
+//           <motion.div
+//             variants={fadeInUp}
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Contact</h2>
+//             <div className="space-y-4 text-black">
+//               <div className="flex items-center space-x-4">
+//                 <MdEmail className="text-blue-500 w-6 h-6" />
+//                 <p>nshimiyumukizaerneste99@gmail.com</p>
+//               </div>
+//               <div className="flex items-center space-x-4">
+//                 <MdPhoneInTalk className="text-blue-500 w-6 h-6" />
+//                 <p>0794650639</p>
+//               </div>
+//               <div className="flex items-center space-x-4">
+//                 <ImFacebook2 className="text-blue-500 w-6 h-6" />
+//                 <p>Eneste Sagaga</p>
+//               </div>
+//               <div className="flex items-center space-x-4">
+//                 <FaGithub className="text-blue-500 w-6 h-6" />
+//                 <p>nshimiyumukiza</p>
+//               </div>
+//             </div>
+//           </motion.div>
+
+//           {/* Education Section */}
+//           <motion.div
+//             variants={fadeInUp}
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Education</h2>
+//             <div className="space-y-6 text-black">
+//               <div>
+//                 <span className="text-xl font-bold underline">2021-2024</span>
+//                 <ul className="mt-4 space-y-2">
+//                   <li>SCHOOL: ES APEM Ngarama</li>
+//                   <li>Combination: MCE (Mathematics, Economics, and Computer Science)</li>
+//                   <li>DEGREE: A2</li>
+//                 </ul>
+//               </div>
+//               <div>
+//                 <span className="text-xl font-bold underline">2024-2025</span>
+//                 <ul className="mt-4">
+//                   <li>Nyabiheke Coding School</li>
+//                 </ul>
+//               </div>
+//             </div>
+//           </motion.div>
+
+//           {/* General Skills Section */}
+//           <motion.div
+//             variants={fadeInUp}
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">General Skills</h2>
+//             <ul className="space-y-2 text-black">
+//               <li>Effective Communication</li>
+//               <li>Leadership</li>
+//               <li>Time Management</li>
+//               <li>Conflict Resolution</li>
+//             </ul>
+//           </motion.div>
+
+//           {/* Languages Section */}
+//           <motion.div
+//             variants={fadeInUp}
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Languages</h2>
+//             <ul className="space-y-2 text-black">
+//               <li>English</li>
+//               <li>Kinyarwanda</li>
+//             </ul>
+//           </motion.div>
+//         </motion.div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CV;
+
+// import { motion } from "framer-motion"; // Import Framer Motion
+// import { MdEmail, MdPhoneInTalk } from "react-icons/md";
+// import { ImFacebook2 } from "react-icons/im";
+// import { FaGithub } from "react-icons/fa";
+
+// const CV = () => {
+//   // Animation variants for Framer Motion
+//   const fadeInUp = {
+//     hidden: { opacity: 0, y: 20 },
+//     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+//   };
+
+//   const staggerContainer = {
+//     hidden: { opacity: 0 },
+//     visible: {
+//       opacity: 1,
+//       transition: {
+//         staggerChildren: 0.2, // Stagger animations for children
+//       },
+//     },
+//   };
+
+//   // Left-to-right motion variant
+//   const leftToRight = {
+//     hidden: { opacity: 0, x: -50 }, // Start 50px to the left
+//     visible: { opacity: 1, x: 0, transition: { duration: 1, ease: "easeOut" } }, // Move to original position
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-black py-8">
+//       <div className="container mx-auto px-4">
+//         {/* Profile Section */}
+//         <motion.div
+//           initial="hidden"
+//           animate="visible"
+//           variants={staggerContainer}
+//           className="flex justify-center"
+//         >
+//           <motion.div variants={fadeInUp} className="text-center">
+//             <img
+//               src="./image.png"
+//               alt="Profile Picture"
+//               className="mx-auto mb-8 w-48 h-48 rounded-full object-cover transform transition-transform duration-300 hover:scale-105"
+//             />
+//             <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl font-bold">
+//               Nshimiyumukiza Erneste
+//             </h1>
+//             <p className="text-2xl mt-2">FullStack Developer</p>
+//             <p className="text-xl mt-2">Birth Date: 30/3/2004</p>
+//           </motion.div>
+//         </motion.div>
+
+//         {/* Contact, Education, Skills, and Languages Sections */}
+//         <motion.div
+//           initial="hidden"
+//           animate="visible"
+//           variants={staggerContainer}
+//           className="flex flex-col md:flex-row justify-between mt-8 space-y-8 md:space-y-0 md:space-x-8"
+//         >
+//           {/* Contact Section */}
+//           <motion.div
+//             variants={leftToRight} // Apply left-to-right motion
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Contact</h2>
+//             <div className="space-y-4 text-black">
+//               <div className="flex items-center space-x-4">
+//                 <MdEmail className="text-blue-500 w-6 h-6" />
+//                 <p>nshimiyumukizaerneste99@gmail.com</p>
+//               </div>
+//               <div className="flex items-center space-x-4">
+//                 <MdPhoneInTalk className="text-blue-500 w-6 h-6" />
+//                 <p>0794650639</p>
+//               </div>
+//               <div className="flex items-center space-x-4">
+//                 <ImFacebook2 className="text-blue-500 w-6 h-6" />
+//                 <p>Eneste Sagaga</p>
+//               </div>
+//               <div className="flex items-center space-x-4">
+//                 <FaGithub className="text-blue-500 w-6 h-6" />
+//                 <p>nshimiyumukiza</p>
+//               </div>
+//             </div>
+//           </motion.div>
+
+//           {/* Education Section */}
+//           <motion.div
+//             variants={leftToRight} // Apply left-to-right motion
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Education</h2>
+//             <div className="space-y-6 text-black">
+//               <div>
+//                 <span className="text-xl font-bold underline">2021-2024</span>
+//                 <ul className="mt-4 space-y-2">
+//                   <li>SCHOOL: ES APEM Ngarama</li>
+//                   <li>Combination: MCE (Mathematics, Economics, and Computer Science)</li>
+//                   <li>DEGREE: A2</li>
+//                 </ul>
+//               </div>
+//               <div>
+//                 <span className="text-xl font-bold underline">2024-2025</span>
+//                 <ul className="mt-4">
+//                   <li>Nyabiheke Coding School</li>
+//                 </ul>
+//               </div>
+//             </div>
+//           </motion.div>
+
+//           {/* General Skills Section */}
+//           <motion.div
+//             variants={leftToRight} // Apply left-to-right motion
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">General Skills</h2>
+//             <ul className="space-y-2 text-black">
+//               <li>Effective Communication</li>
+//               <li>Leadership</li>
+//               <li>Time Management</li>
+//               <li>Conflict Resolution</li>
+//             </ul>
+//           </motion.div>
+
+//           {/* Languages Section */}
+//           <motion.div
+//             variants={leftToRight} // Apply left-to-right motion
+//             className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+//           >
+//             <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Languages</h2>
+//             <ul className="space-y-2 text-black">
+//               <li>English</li>
+//               <li>Kinyarwanda</li>
+//             </ul>
+//           </motion.div>
+//         </motion.div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CV;
+
+import { motion } from "framer-motion"; // Import Framer Motion
+import { MdEmail, MdPhoneInTalk } from "react-icons/md";
 import { ImFacebook2 } from "react-icons/im";
 import { FaGithub } from "react-icons/fa";
 
 const CV = () => {
+  // Animation variants for Framer Motion
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Stagger animations for children
+      },
+    },
+  };
+
+  const slideInLeftToRight = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 1 } },
+  };
+
   return (
-    <div>
-      <div>
-        <div className="flex justify-center mt-6">
-          <div>
+    <div className="min-h-screen bg-black py-8">
+      <div className="container mx-auto px-4">
+        {/* Profile Section */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+          className="flex justify-center"
+        >
+          <motion.div variants={fadeInUp} className="text-center">
             <img
               src="./image.png"
-              alt=""
-              className="mx-autor mb-8 w-48 h-48 rounded-full object-cover transifrom transition-transiform 
-      duretion-300 hover:scale-105 "
+              alt="Profile Picture"
+              className="mx-auto mb-8 w-48 h-48 rounded-full object-cover transform transition-transform duration-300 hover:scale-105"
             />
-            <p className="text-transparent bg-clip-text bg-gradient-to-r from bg-green-400 to-blue-500>nshimiyumukiza erneste text-4xl">
+            <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl font-bold">
               Nshimiyumukiza Erneste
-            </p>
-            <p className="text-2xl ">FullStack Developer</p>
-            <span className="text-xl mb-4">Birth Date: 30/3/2004</span>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row space-x-12 mt-8 md:mt-14 md:mx-auto md:w-11/12">
-          <div className="space-y-4 text-xl">
-            <div className="flex-col space-y-4 md:hover:border md:hover:bg-green-500 md:hover:px-4 md:hover:rounded-md md:hover:py-3">
-              <div>
-                <p className="text-3xl m-5 font-bold underline text-blue-500">
-                  Contact
-                </p>
-                <div className="flex gap-1 items-center">
-                  <MdEmail className="text-blue-500 w-[50px]" />
-                  <p>nshimiyumukizaerneste99gmail.com</p>
-                </div>
-              </div>
+            </h1>
+            <p className="text-2xl mt-2">FullStack Developer</p>
+            <p className="text-xl mt-2">Birth Date: 30/3/2004</p>
+          </motion.div>
+        </motion.div>
 
-              <div className="flex gap-1 items-center">
-                <MdPhoneInTalk className="text-blue-500  w-[50px]" />
+        {/* Contact, Education, Skills, and Languages Sections */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={slideInLeftToRight}
+          className="flex flex-col md:flex-row justify-between mt-8 space-y-8 md:space-y-0 md:space-x-8"
+        >
+          {/* Contact Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Contact</h2>
+            <div className="space-y-4 text-black">
+              <div className="flex items-center space-x-4">
+                <MdEmail className="text-blue-500 w-6 h-6" />
+                <p>nshimiyumukizaerneste99@gmail.com</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <MdPhoneInTalk className="text-blue-500 w-6 h-6" />
                 <p>0794650639</p>
               </div>
+              <div className="flex items-center space-x-4">
+                <ImFacebook2 className="text-blue-500 w-6 h-6" />
+                <p>Eneste Sagaga</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <FaGithub className="text-blue-500 w-6 h-6" />
+                <p>nshimiyumukiza</p>
+              </div>
+            </div>
+          </motion.div>
 
-              <div className="flex gap-1 items-center">
-                <ImFacebook2 className="text-blue-500  w-[50px]" />
-                <h1>Eneste Sagaga</h1>
-              </div>
-              <div className="flex gap-1 items-center">
-                <FaGithub className="text-blue-500  w-[50px]" />
-                <h1>nshimiyumukiza</h1>
-              </div>
-            </div>
-          </div>
-          <div className="flex-col space-y-4 md:hover:border md:hover:bg-green-500 md:hover:px-4 md:hover:rounded-md md:hover:py-3">
-            <div>
-              <p className="text-3xl ml-12 m-5 font-bold underline text-blue-500">
-                Education
-              </p>
+          {/* Education Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Education</h2>
+            <div className="space-y-6 text-black">
               <div>
-                <div className="m-7 ml-10">
-                  <span className="text-xl font-bold mb-4 underline ">
-                    2021-2024
-                  </span>
-                  <ul className=" text-xl space-y-4 mt-4">
-                    <li>SCHOOL: ES APEM Ngarama</li>
-                    <li className="w-64">
-                      combination: MCE Mathemetics Economics And Computer
-                      sciance
-                    </li>
-                    <li>DEGREE: A2</li>
-                  </ul>
-                </div>
-                <div className="mb-4 space-y-4 ml-12">
-                  <span className="text-xl font-bold underline">2024-205</span>
-                  <ul className="mt-4">
-                    <li>Nyabiheke Coding School</li>
-                  </ul>
-                </div>
+                <span className="text-xl font-bold underline">2021-2024</span>
+                <ul className="mt-4 space-y-2">
+                  <li>SCHOOL: ES APEM Ngarama</li>
+                  <li>Combination: MCE (Mathematics, Economics, and Computer Science)</li>
+                  <li>DEGREE: A2</li>
+                </ul>
+              </div>
+              <div>
+                <span className="text-xl font-bold underline">2024-2025</span>
+                <ul className="mt-4">
+                  <li>Nyabiheke Coding School</li>
+                </ul>
               </div>
             </div>
-          </div>
-          <div className="flex-col space-y-4 md:hover:border md:hover:bg-green-500 md:hover:px-4 md:hover:rounded-md md:hover:py-3">
-            <div>
-              <p className="text-3xl ml-12 m-5 font-bold underline text-blue-500">
-                General skills
-              </p>
-            </div>
-            <div>
-              <ul className="space-y-4 text-xl ml-11">
-                <li>Effective commonication</li>
-                <li>Leadership</li>
-                <li>Time Management</li>
-                <li>Sloving Conflict</li>
-              </ul>
-            </div>
-          </div>
-          <div className="flex-col space-y-4 md:hover:border md:hover:bg-green-500 md:hover:px-4 md:hover:rounded-md md:hover:py-3">
-            <div>
-              <p className="text-3xl ml-12 m-5 font-bold underline text-blue-500">
-                Languange
-              </p>
-            </div>
-            <div>
-              <ul className="space-y-4 text-xl ml-10">
-                <li>English</li>
-                <li>Kinyarwanda</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+          </motion.div>
+
+          {/* General Skills Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <h2 className="text-3xl font-bold underline text-blue-500 mb-6">General Skills</h2>
+            <ul className="space-y-2 text-black">
+              <li>Effective Communication</li>
+              <li>Leadership</li>
+              <li>Time Management</li>
+              <li>Conflict Resolution</li>
+            </ul>
+          </motion.div>
+
+          {/* Languages Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <h2 className="text-3xl font-bold underline text-blue-500 mb-6">Languages</h2>
+            <ul className="space-y-2 text-black">
+              <li>English</li>
+              <li>Kinyarwanda</li>
+            </ul>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );
 };
 
 export default CV;
+
+
+
+
