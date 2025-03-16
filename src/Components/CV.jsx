@@ -41,7 +41,7 @@ const CV = () => {
               alt="Profile Picture"
               className="mx-auto mb-8 w-48 h-48 rounded-full object-cover transform transition-transform duration-300 hover:scale-105"
             />
-            <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl font-bold">
+            <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl fontd-bol">
               Nshimiyumukiza Erneste
             </h1>
             <p className="text-2xl mt-2">FullStack Developer</p>

@@ -30,7 +30,7 @@ const Navbar = () => {
           <div className="flex gap-1 items-center">
             <RiContactsFill className="text-blue-500"/>
             <Link to="contact" className="hover:text-blue-400">
-              Contact
+              Resume
             </Link>
           </div>
         </div>
