@@ -2,6 +2,8 @@ import { Input } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import { FaEnvelope, FaMapMarkedAlt, FaPhone } from "react-icons/fa";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { MdCheckCircle, MdError } from "react-icons/md";
 const { TextArea } = Input;
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,9 @@ const Contact = () => {
     email: "",
     message: "",
   });
+  const [status, setStatus] = useState({
+    type: "", message: ""
+  })
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -20,10 +25,16 @@ const Contact = () => {
 
   const HandleSendMessage = async (e) => {
     e.preventDefault();
+    setStatus({ type: "loading", message: "sending message..." })
+    try {
+      const response = await axios.post("http://localhost:4500/user/", formData);
+      setStatus({ type: "success", message: "Message Sent Successfuly!" })
+      setFormData({ name: "", email: "", message: "" })
+      console.log(response.data.message)
+    } catch (error) {
+      setStatus({ type: "error", message: "Failed to send message. Try again." })
+    }
 
-    const response = await axios.post("http://localhost:4500/user/", formData);
-    console.log(response);
-    alert(response.data.message);
   };
   return (
     <div className="bg-black text-white md:py-16 md:px-16 px-4 py-4 ">
@@ -38,7 +49,7 @@ const Contact = () => {
                 let's talk
               </h1>
               <p>
-                i'm open descussing web projects or parternship opportunities
+                I'm open descussing web projects or parternship opportunities
               </p>
               <div className="mb-4 mt-8">
                 <FaEnvelope className="text-green-400" />
@@ -62,29 +73,32 @@ const Contact = () => {
           </h1>
           <form action="submit" onSubmit={HandleSendMessage}>
             <div>
-              <label className="text-xl" htmlFor="name">
-                name
+              <label className="text-xl font-semibold" htmlFor="name">
+                Name
               </label>
               <Input
-                placeholder="enter your name"
+                placeholder="Enter Your Name"
+                required
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                
               />
             </div>
             <div>
-              <label className="text-xl" htmlFor="email">
-                email
+              <label className="text-xl font-semibold" htmlFor="email">
+                Email
               </label>
               <Input
-                placeholder="enter email "
+                placeholder="Enter Your Email "
+                required
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className="text-xl" htmlFor="message">
+              <label className="text-xl font-semibold" htmlFor="message">
                 Message
               </label>
               <TextArea
@@ -93,18 +107,23 @@ const Contact = () => {
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="enter message"
+                placeholder="Write Message" 
+                required
                 style={{
                   height: 120,
                   resize: "none",
                 }}
               />
-              <button
-                type="submit"
-                className="bg-gradient-to-r  from-pink-400 to-blue-500 text-white  md:inline px-4 py-2 rounded-full mt-4"
-              >
-                Send
-              </button>
+          {status.message && (
+        <p className={`mt-4 text-lg ${status.type === "success" ? "text-green-500" : "text-red-500"}`}>
+          {status.message}
+        </p>
+      )}
+
+      <button type="submit"
+        className="w-full mt-4 bg-gradient-to-r from-pink-400 to-blue-500 text-white py-2 rounded">
+        {status.type === "loading" ? "Sending..." : "Send"}
+      </button>
             </div>
           </form>
         </div>
