@@ -2,8 +2,6 @@ import { Input } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import { FaEnvelope, FaMapMarkedAlt, FaPhone } from "react-icons/fa";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { MdCheckCircle, MdError } from "react-icons/md";
 const { TextArea } = Input;
 const Contact = () => {
   const [formData, setFormData] = useState({

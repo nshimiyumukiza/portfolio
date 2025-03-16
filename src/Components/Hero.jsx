@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router";
 import { useState } from "react";
 import About from "./About";
 import Contact from "./Contact";
-import Footer1 from "./Footer1";
+import { motion } from "motion/react";
 const Hero = () => {
   const [click, setClick] = useState();
   return (
@@ -18,13 +18,14 @@ const Hero = () => {
           />
         </div>
         <h1 className="text-4xl font-bold">
-          i'm{""}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from bg-green-400 to-blue-500">
+          I'm{""}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl fontd-bol">
             {" "}
             nshimiyumukiza erneste
           </span>
           ,student developer
         </h1>
+        
         <p className="mt-4 text-lg text-gray-300 px-4 md:px-32">
           i have the goal to be full stack developer
         </p>
@@ -35,12 +36,13 @@ const Hero = () => {
           >
             contact with me
           </Link>
-          <button
-            onClick={() => setClick(alert("wait "))}
+          <Link
+            to="/contact"
+
             className="bg-gradient-to-r  from-pink-400 to-blue-500 text-white hidden md:inline px-4 py-2 rounded-full"
           >
             resume
-          </button>
+          </Link>
         </div>
       </div>
       <About />
