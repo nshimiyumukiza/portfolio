@@ -25,7 +25,7 @@ const Contact = () => {
     e.preventDefault();
     setStatus({ type: "loading", message: "sending message..." })
     try {
-      const response = await axios.post("http://localhost:4500/user/", formData);
+      const response = await axios.post("https://portfolio-backend-mqsl.onrender.com/user", formData);
       setStatus({ type: "success", message: "Message Sent Successfuly!" })
       setFormData({ name: "", email: "", message: "" })
       console.log(response.data.message)
