@@ -6,7 +6,7 @@ import { RiContactsFill } from "react-icons/ri";
 const Navbar = () => {
   return (
     <nav className="bg-black text-white px-8 md:px-16 md:py-8 py-4 ">
-      <div className="py-2 flex justify-center md:justify-between items-center">
+      <div className="py-2 flex justify-center md:justify-between items-center w-11/12 mx-auto md:px-16">
         <Link
           to="/"
           className="text-2xl font-bold hidden md:inline text-green-500"

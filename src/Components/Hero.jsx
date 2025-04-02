@@ -21,7 +21,7 @@ const Hero = () => {
           I'm{""}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-4xl fontd-bol">
             {" "}
-            nshimiyumukiza erneste
+            Nshimiyumukiza Erneste
           </span>
           ,student developer
         </h1>
