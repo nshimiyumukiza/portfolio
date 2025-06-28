@@ -1,483 +1,304 @@
-import { Link, Outlet } from "react-router";
 
+
+import { Link, Outlet } from "react-router";
 import About from "./About";
 import Contact from "./Contact";
 import { useState, useRef, useEffect } from "react";
 
-const CVViewer = ({ isOpen, onClose }) => {
-  const [pdfFile, setPdfFile] = useState(null);
-  const [pdfUrl, setPdfUrl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [pdfList, setPdfList] = useState([]);
-  const [apiConnected, setApiConnected] = useState(false);
-  const [pdfBlob, setPdfBlob] = useState(null);
+const CVViewer = ({ isOpen, onClose, cvFile, onFileUpload }) => {
+
+
+  const [cvError, setCvError] = useState(false);
   const fileInputRef = useRef(null);
-
-  const API_URL = "http://localhost:4500/api/pdfs";
-
-  useEffect(() => {
-    if (isOpen) {
-      checkApiConnection();
-    }
-  }, [isOpen]);
-
-  // Cleanup blob URL when component unmounts or PDF changes
-  useEffect(() => {
-    return () => {
-      if (pdfBlob) {
-        URL.revokeObjectURL(pdfBlob);
-      }
-    };
-  }, [pdfBlob]);
-
-  const checkApiConnection = async () => {
-    try {
-      setIsLoading(true);
-      setError("");
-      console.log("Checking API connection...");
-      
-      const response = await fetch(`${API_URL}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (response.ok) {
-        setApiConnected(true);
-        console.log("API connected successfully");
-        await fetchPDFs();
-      } else {
-        throw new Error(`API responded with status: ${response.status}`);
-      }
-    } catch (err) {
-      console.error('API Connection Error:', err);
-      setApiConnected(false);
-      setError(`Cannot connect to API: ${err.message}. Make sure your backend server is running on port 4500.`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchPDFs = async () => {
-    try {
-      console.log("Fetching PDFs...");
-      const response = await fetch(`${API_URL}`);
-      if (!response.ok) throw new Error('Failed to fetch PDFs');
-      
-      const data = await response.json();
-      console.log("PDFs fetched:", data);
-      setPdfList(data);
-      
-      if (data.length > 0) {
-        const firstPdf = data[0];
-        setPdfFile(firstPdf);
-        await loadPDFBlob(firstPdf._id);
-        setError("");
-      } else {
-        setError("No PDFs found. Please upload a CV first.");
-      }
-    } catch (err) {
-      console.error('Fetch PDFs Error:', err);
-      setError(`Failed to fetch PDFs: ${err.message}`);
-    }
-  };
-
-  const loadPDFBlob = async (pdfId) => {
-    try {
-      setIsLoading(true);
-      console.log("Loading PDF blob for ID:", pdfId);
-      
-      const response = await fetch(`${API_URL}/download/${pdfId}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/pdf',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
-      }
-      
-      const blob = await response.blob();
-      console.log("PDF blob loaded, size:", blob.size, "type:", blob.type);
-      
-      // Verify it's actually a PDF
-      if (!blob.type.includes('pdf') && blob.size > 0) {
-        console.warn("Response might not be a PDF, trying anyway...");
-        // Force the blob type to be PDF
-        const correctedBlob = new Blob([blob], { type: 'application/pdf' });
-        blob = correctedBlob;
-      }
-      
-      // Clean up previous blob URL
-      if (pdfBlob) {
-        URL.revokeObjectURL(pdfBlob);
-      }
-      
-      // Create new blob URL
-      const blobUrl = URL.createObjectURL(blob);
-      setPdfBlob(blobUrl);
-      
-      // Try different PDF viewing approaches
-      const directUrl = blobUrl;
-      const pdfJsUrl = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/web/viewer.html?file=${encodeURIComponent(directUrl)}`;
-      
-      // Set both URLs for different viewing methods
-      setPdfUrl(directUrl);
-      
-      console.log("PDF URLs created:");
-      console.log("Direct:", directUrl);
-      console.log("PDF.js:", pdfJsUrl);
-      
-    } catch (err) {
-      console.error('Load PDF Blob Error:', err);
-      setError(`Failed to load PDF: ${err.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) uploadPDF(file);
-  };
-
-  const uploadPDF = async (file) => {
-    if (file.type !== "application/pdf") {
-      setError("Please select a PDF file.");
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      setError("File size must be less than 10MB.");
-      return;
-    }
-
-    setIsLoading(true);
-    setError("");
-    setSuccess("");
-    
-    const formData = new FormData();
-    formData.append("pdf", file);
-
-    try {
-      const response = await fetch(`${API_URL}/upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-      
-      setSuccess("PDF uploaded successfully!");
-      await fetchPDFs();
-    } catch (err) {
-      console.error('Upload Error:', err);
-      setError(`Upload failed: ${err.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDownload = () => {
-    if (pdfUrl && pdfFile) {
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.download = pdfFile.originalname || "cv.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-
-  const openFullscreen = () => {
-    if (pdfUrl) {
-      window.open(pdfUrl, "_blank");
-    }
-  };
-
-  const handleRetryLoad = () => {
-    if (pdfFile && pdfFile._id) {
-      loadPDFBlob(pdfFile._id);
-    } else {
-      fetchPDFs();
-    }
-  };
 
   if (!isOpen) return null;
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      onFileUpload(file);
+      setCvError(false);
+    } else {
+      alert('Please select a valid PDF file');
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const downloadCV = () => {
+    if (cvFile) {
+      const url = URL.createObjectURL(cvFile);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = cvFile.name || 'CV.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  const openInNewTab = () => {
+    if (cvFile) {
+      const url = URL.createObjectURL(cvFile);
+      window.open(url, '_blank');
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-5xl h-5/6 flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
+      <div className="bg-white rounded-3xl w-full max-w-6xl h-5/6 flex flex-col shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
         {/* Header */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex justify-between items-center flex-wrap gap-4">
-            <div className="flex gap-3 items-center">
-              <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
-                <span className="text-white text-xs">📄</span>
+        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-blue-50">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-4 items-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {pdfFile?.originalname || "CV Viewer"}
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-800">My CV</h2>
                 <p className="text-sm text-gray-600">
-                  Status: {apiConnected ? "✅ Connected" : "❌ Disconnected"}
+                  {cvFile ? cvFile.name : "Nshimiyumukiza Erneste - Resume"}
                 </p>
-                {pdfFile && (
-                  <p className="text-xs text-gray-500">
-                    Size: {pdfFile.size ? `${(pdfFile.size / 1024).toFixed(1)} KB` : 'Unknown'}
-                  </p>
-                )}
               </div>
             </div>
 
-            <div className="flex gap-2 flex-wrap">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileSelect}
-                accept="application/pdf"
-                className="hidden"
-              />
-              <button 
-                onClick={() => fileInputRef.current?.click()} 
-                disabled={!apiConnected || isLoading}
-                className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            <div className="flex gap-3">
+              {!cvFile && (
+                <button
+                  onClick={handleUploadClick}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 flex items-center gap-2 font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  Upload CV
+                </button>
+              )}
+
+              {cvFile && (
+                <>
+                  <button
+                    onClick={openInNewTab}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 flex items-center gap-2 font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    Open in New Tab
+                  </button>
+                  <button
+                    onClick={downloadCV}
+                    className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 flex items-center gap-2 font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Download
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={onClose}
+                className="bg-gradient-to-r from-red-500 to-rose-500 text-white px-4 py-2.5 rounded-xl hover:shadow-lg hover:shadow-red-500/25 transition-all duration-300 font-medium"
               >
-                📤 Upload
-              </button>
-              <button 
-                onClick={openFullscreen} 
-                disabled={!pdfUrl}
-                className="bg-gradient-to-r from-purple-400 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                🔗 Open
-              </button>
-              <button 
-                onClick={handleDownload} 
-                disabled={!pdfUrl}
-                className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                💾 Download
-              </button>
-              <button 
-                onClick={onClose} 
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
-              >
-                ✕
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Status Messages */}
-        <div className="px-6 pt-4">
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-red-500">⚠️</span>
-                <span className="font-medium">Error:</span>
-              </div>
-              <p className="text-sm">{error}</p>
-              <button 
-                onClick={handleRetryLoad}
-                className="mt-2 text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
-              >
-                🔄 Retry
-              </button>
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 flex items-center gap-2">
-              <span className="text-green-500">✅</span>
-              <span>{success}</span>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4 flex items-center gap-2">
-              <span className="animate-spin">⏳</span>
-              <span>Loading PDF...</span>
-            </div>
-          )}
-        </div>
-
         {/* PDF Viewer */}
         <div className="flex-1 px-6 pb-6">
-          <div className="h-full bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-300">
-            {pdfUrl ? (
-              <div className="h-full relative">
-                {/* Try multiple rendering methods */}
-                <div className="h-full">
-                  {/* Method 1: Object tag (most compatible) */}
-                  <object
-                    data={pdfUrl}
-                    type="application/pdf"
-                    className="w-full h-full"
-                    onError={() => {
-                      console.log("Object tag failed, trying iframe...");
-                    }}
+          <div className="h-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden border border-gray-200 shadow-inner">
+            {cvFile && !cvError ? (
+              <div className="h-full relative group">
+                <iframe
+                  src={URL.createObjectURL(cvFile)}
+                  title="CV Viewer"
+                  className="w-full h-full rounded-2xl border-0"
+                  onError={() => setCvError(true)}
+                  onLoad={() => setCvError(false)}
+                />
+
+                {/* Floating Controls */}
+                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button
+                    onClick={openInNewTab}
+                    className="bg-white/90 backdrop-blur-sm text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-white transition-all duration-200 shadow-lg border"
                   >
-                    {/* Method 2: Embed tag fallback */}
-                    <embed
-                      src={pdfUrl}
-                      type="application/pdf"
-                      className="w-full h-full"
-                      onError={() => {
-                        console.log("Embed tag failed, showing iframe...");
-                      }}
-                    />
-                    
-                    {/* Method 3: iframe fallback */}
-                    <iframe 
-                      src={`${pdfUrl}#toolbar=1&navpanes=0&scrollbar=1&view=FitH`}
-                      title="PDF Preview" 
-                      className="w-full h-full border-0"
-                      sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                      onLoad={() => {
-                        console.log("PDF loaded successfully");
-                        setError("");
-                      }}
-                      onError={(e) => {
-                        console.error("All PDF loading methods failed:", e);
-                        setError("Your browser cannot display PDFs inline. Please use the 'Open in New Tab' button.");
-                      }}
-                    />
-                    
-                    {/* Method 4: Final fallback - message */}
-                    <div className="flex items-center justify-center h-full bg-gray-50">
-                      <div className="text-center p-8">
-                        <div className="text-6xl mb-4">📄</div>
-                        <p className="text-lg font-medium mb-4">PDF Ready to View</p>
-                        <p className="text-sm text-gray-600 mb-4">
-                          Your browser cannot display PDFs inline, but the PDF is ready to view.
-                        </p>
-                        <div className="flex gap-2 justify-center">
-                          <a 
-                            href={pdfUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                          >
-                            📖 Open PDF
-                          </a>
-                          <button 
-                            onClick={handleDownload}
-                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-                          >
-                            💾 Download
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </object>
-                </div>
-                
-                {/* Control buttons overlay */}
-                <div className="absolute top-2 right-2 flex gap-2">
-                  <a 
-                    href={pdfUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors shadow-lg"
+                    Open
+                  </button>
+                  <button
+                    onClick={downloadCV}
+                    className="bg-white/90 backdrop-blur-sm text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-white transition-all duration-200 shadow-lg border"
                   >
-                    🔗 Open
-                  </a>
-                  <button 
-                    onClick={handleDownload}
-                    className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors shadow-lg"
+                    Save
+                  </button>
+                  <button
+                    onClick={handleUploadClick}
+                    className="bg-white/90 backdrop-blur-sm text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-white transition-all duration-200 shadow-lg border"
                   >
-                    💾 Save
+                    Replace
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-gray-500">
+              <div className="flex items-center justify-center h-full">
                 <div className="text-center p-8">
-                  <div className="text-6xl mb-4">📄</div>
-                  <p className="text-lg font-medium mb-2">No PDF loaded</p>
-                  <p className="text-sm max-w-md mb-4">
-                    {apiConnected 
-                      ? "Upload a PDF or check if any PDFs are available on the server" 
-                      : "Waiting for API connection. Make sure your backend server is running on localhost:4500"
+                  <div className="text-8xl mb-6">📄</div>
+                  <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                    {cvError ? "Failed to Load CV" : "No CV Uploaded"}
+                  </h3>
+                  <p className="text-gray-600 max-w-md mb-8 leading-relaxed">
+                    {cvError
+                      ? "There was an error loading your CV file. Please try uploading it again."
+                      : "Upload your CV in PDF format to view it here. Click the button below to get started."
                     }
                   </p>
-                  {apiConnected ? (
-                    <button 
-                      onClick={handleRetryLoad}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                  <div className="flex gap-4 justify-center">
+                    <button
+                      onClick={handleUploadClick}
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 font-medium text-lg flex items-center gap-3"
                     >
-                      🔄 Retry Loading PDF
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      Upload CV (PDF)
                     </button>
-                  ) : (
-                    <button 
-                      onClick={checkApiConnection}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                    >
-                      🔄 Retry Connection
-                    </button>
-                  )}
+                  </div>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
     </div>
   );
 };
 
 const Hero = () => {
   const [isCVOpen, setIsCVOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [cvFile, setCvFile] = useState(null);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const handleFileUpload = (file) => {
+    setCvFile(file);
+  };
 
   return (
     <div>
-      <div className="bg-black text-white py-16 text-center px-12 relative overflow-hidden">
-        <div className="relative z-10">
-          <div className="flex justify-center">
-            <img 
-              src="./image.png" 
-              alt="Nshimiyumukiza Erneste" 
-              className="mx-auto mb-8 w-48 h-48 rounded-full object-cover transform transition-transform duration-300 hover:scale-105" 
-              onError={(e) => {
-                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNjM2NjczIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSI2MCI+8J+RpDwvdGV4dD4KPC9zdmc+';
-              }}
-            />
-          </div>
+      {/* Hero Section */}
+      <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{ animationDelay: "2s" }}></div>
+          <div className="absolute -bottom-8 left-40 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{ animationDelay: "4s" }}></div>
+        </div>
 
-          <h1 className="text-4xl font-bold">
-            I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">Nshimiyumukiza Erneste</span>, student developer
-          </h1>
+        {/* Main Content */}
+        <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-5xl mx-auto">
+            {/* Profile Image */}
+            <div className={`mb-12 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div className="relative inline-block">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-2xl opacity-50 animate-pulse scale-110"></div>
+                <img
+                  src="./image.png"
+                  alt="Nshimiyumukiza Erneste"
+                  className="relative w-48 h-48 md:w-56 md:h-56 rounded-full object-cover mx-auto border-4 border-white/20 shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNjM2NjczIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSI2MCI+8J+RpDwvdGV4dD4KPC9zdmc+';
+                  }}
+                />
 
-          <p className="mt-4 text-lg text-gray-300 px-4 md:px-32">
-            I have the goal to be a full stack developer
-          </p>
+              </div>
+            </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <button className="hidden md:flex bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-3 rounded-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300 font-semibold">
-              Contact with me
-            </button>
-            <button 
-              onClick={() => setIsCVOpen(true)} 
-              className="hidden md:flex bg-gradient-to-r from-pink-400 to-purple-500 text-white px-6 py-3 rounded-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300 font-semibold"
-            >
-              👁️ View CV
-            </button>
-            <button className="hidden md:flex bg-gradient-to-r from-purple-400 to-blue-500 text-white px-6 py-3 rounded-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300 font-semibold">
-              Resume
-            </button>
-          </div>
+            {/* Main Heading */}
+            <div className={`mb-8 transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <h1 className="text-5xl md:text-7xl font-bold mb-4 leading-tight">
+                I'm <span className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">Nshimiyumukiza Erneste</span>
+              </h1>
+              <div className="text-2xl md:text-3xl font-light text-gray-300">
+                <span className="inline-block animate-bounce" style={{ animationDelay: '1s' }}>Full</span>
+                <span className="inline-block animate-bounce mx-2" style={{ animationDelay: '2s' }}>Stack</span>
+                <span className="inline-block animate-bounce" style={{ animationDelay: '3s' }}>Developer</span>
+              </div>
+            </div>
 
-          <div className="md:mt-8 text-lg text-white">
-            <p>💼 Available for internships and junior developer positions</p>
+            {/* Description */}
+            <div className={`mb-12 transform transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <p className="text-xl md:text-2xl text-gray-300/90 max-w-3xl mx-auto leading-relaxed font-light">
+                Passionate about creating elegant solutions through code.
+                <span className="block mt-2 text-lg text-purple-300">
+                  Turning ideas into reality, one line of code at a time.
+                </span>
+              </p>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className={`mb-12 transform transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div className="flex flex-col sm:flex-row justify-center gap-6 items-center">
+                {/* Contact Button */}
+                <button className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-green-500/25 transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                  <span className="relative z-10 flex items-center gap-2">
+                    📩 Get In Touch
+                  </span>
+                </button>
+
+                {/* View CV Button */}
+                <button
+                  onClick={() => setIsCVOpen(true)}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-purple-500/25 transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    👁️ View CV
+                    {cvFile && <span className="w-2 h-2 bg-green-400 rounded-full"></span>}
+                  </span>
+                </button>
+
+                {/* Resume Button */}
+                <a href="/contact" className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                  <span className="relative z-10 flex items-center gap-2">
+                    📄 Resume
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <CVViewer isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
+      {/* CV Viewer Modal */}
+      <CVViewer
+        isOpen={isCVOpen}
+        onClose={() => setIsCVOpen(false)}
+        cvFile={cvFile}
+        onFileUpload={handleFileUpload}
+      />
+
       <About />
       <Contact />
       <Outlet />
